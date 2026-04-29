@@ -10,8 +10,6 @@ export function useMemberSessionForm(memberId: number, existingSchedules: Sessio
     if(!memberId) return;
 
     if(existingSchedules.length > 0){
-      console.log("initialize with existing schedules", existingSchedules);
-      
       return dispatch({ type: "INIT", payload: existingSchedules });
     }
 

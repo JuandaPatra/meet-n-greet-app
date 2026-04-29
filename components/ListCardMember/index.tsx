@@ -1,18 +1,25 @@
-import { updateTicketsPayLoad, useStore } from "@/store/useStore";
+import { updateTicketsPayLoad } from "@/store/useStore";
 import CardMember from "../CardMember";
-import {Member} from "@/data/member"
+import { MemberForm } from "@/app/mng/page";
 
 
-export default function ListCardMember({ state, actions }: { state: { id: number; name: string; sessions: updateTicketsPayLoad[] }[]; actions: { onEdit: (member: Member) => void } }) {
-  const selectedMembers = useStore((state) => state.selectedMembers);
-  console.log("list card member", state);
+type ListCardMemberProps ={
+  state : MemberForm[];
+  actions : {
+    onEdit: (member: MemberForm) => void;
+    onDelete: (member: MemberForm) => void;
+  }
+}
+
+export default function ListCardMember({ state, actions }: ListCardMemberProps) {
 
   return (
     <div>
       <h2>Selected Members</h2>
-        <div className="flex flex-wrap gap-4 justify-center">
+      <div className="flex flex-wrap gap-4 justify-center">
           {state.map((member) => (
-            <CardMember key={member.id} data={member} onEdit={actions.onEdit} />
+            
+            <CardMember key={member.id} data={member}  action={{onEdit: actions.onEdit, onDelete: () => actions.onDelete(member)}} />
           ))}
         </div>
 

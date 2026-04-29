@@ -25,23 +25,30 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Seachrbar from "../Searchbar/seachbar";
-import { useStore } from "@/store/useStore";
-import { scheduleByMember } from "@/data/scheduleByMember";
 import { reducer, SessionState } from "@/hooks/member-session/reducer";
 import { useMemberSessionForm } from "@/hooks/member-session/useMemberSesion";
-import { Member } from "@/data/member";
+import { MemberForm } from "@/app/mng/page";
 
-export function DrawerDialogDemo({ state, actions }: { state: { isOpen: boolean; selectedMember: Member | null; editMode: "add" | "edit" }; actions: { onClose: () => void , onSubmit: (filteredSessions: SessionState[]) => void } }) {
-  const [open, setOpen] = React.useState(false);
+type DialogProps = {
+  state : StateProps;
+  actions : ActionProps
+}
+
+
+type StateProps ={
+  isOpen : boolean;
+  selectedMember : MemberForm | null;
+  editMode : "add" | "edit";
+}
+
+type ActionProps = {
+  onSubmit : (filteredSessions : SessionState[]) => void;
+  onClose : ()=> void;
+
+}
+export function DrawerDialogDemo({ state, actions }: DialogProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  console.log("edit mode", state.editMode);
-
-
   const existingSchedules = state.selectedMember ? state.selectedMember.sessions || [] : [];
-  console.log("existing schedules", existingSchedules);
-
-
 
   const { session: memberSessions, dispatch: memberDispatch } = useMemberSessionForm(state.selectedMember?.id || 0, existingSchedules);
 
@@ -57,11 +64,11 @@ export function DrawerDialogDemo({ state, actions }: { state: { isOpen: boolean;
 
   if (isDesktop) {
     return (
-      <Dialog open={state.isOpen} onOpenChange={setOpen}>
+      <Dialog open={state.isOpen} >
         <DialogTrigger asChild>
           <Button variant="outline">Tambah Member</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
             <DialogTitle>Tambah Member</DialogTitle>
             <DialogDescription>
@@ -75,8 +82,10 @@ export function DrawerDialogDemo({ state, actions }: { state: { isOpen: boolean;
     );
   }
 
+  if(!state.selectedMember) return null;
+
   return (
-    <Drawer open={state.isOpen} onOpenChange={setOpen}>
+    <Drawer open={state.isOpen} >
       <DrawerTrigger asChild>
         <Button variant="outline">Pilih Member</Button>
       </DrawerTrigger>

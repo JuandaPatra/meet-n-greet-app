@@ -4,28 +4,13 @@ import { persist } from "zustand/middleware";
 import { Member } from "@/data/member";
 
 import { scheduleByMember } from "@/data/scheduleByMember";
-import { SessionState } from "@/hooks/member-session/reducer";
+import { MemberForm } from "@/app/mng/page";
 
-type ScheduleItem = {
-  id: number;
-  session: number;
-  lane: number;
-  time: string;
-  tickets: number;
-};
-
-type SelectedMember = {
-  id: number;
-  name: string;
-  aliases?: string[];
-  // schedule: ScheduleItem[];
-  // selectedSession?: SessionState[];
-  sessions: updateTicketsPayLoad[];
-};
 
 export type addMemberPayload = {
   id: number;
   name: string;
+  slug: string;
   aliases?: string[];
   sessions: updateTicketsPayLoad[];
 };
@@ -39,7 +24,7 @@ export type updateTicketsPayLoad = {
   time: string;
 };
 type Store = {
-  selectedMembers: SelectedMember[];
+  selectedMembers: MemberForm[];
 
   addMember: (member: addMemberPayload) => void;
   removeMember: (id: number) => void;
@@ -60,14 +45,13 @@ export const useStore = create<Store>()(
       addMember: (member) => {
         const exists = get().selectedMembers.find((m) => m.id === member.id);
         if (exists) return;
-
-        const schedules = scheduleByMember[member.id] || [];
         set({
           selectedMembers: [
             ...get().selectedMembers,
             {
               id: member.id,
               name: member.name,
+              slug: member.slug,
               aliases: member.aliases || [],
               sessions: member.sessions,
             },
