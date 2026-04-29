@@ -3,6 +3,7 @@ export type Action =
   | { type: "DECREMENT"; id: number }
   | { type: "SET"; id: number; value: number }
   | { type: "INIT"; payload: SessionState[] }
+  | { type : "UPDATE_TICKETS"; id : number; tickets:number}
 
   export type SessionState = {
   scheduleId: number
@@ -38,6 +39,12 @@ export function reducer(state: SessionState[], action: Action) {
           ? { ...s, tickets: Math.max(0, action.value) }
           : s
       )
+
+      case "UPDATE_TICKETS":
+        return state.map(s =>
+          s.scheduleId === action.id ? { ...s, tickets: Math.max(0, action.tickets)}: s
+        )
+
 
     default:
       return state

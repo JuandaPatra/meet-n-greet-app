@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { reducer, SessionState } from "@/hooks/member-session/reducer";
+import { Action, reducer, SessionState } from "@/hooks/member-session/reducer";
 import { useMemberSessionForm } from "@/hooks/member-session/useMemberSesion";
 import { MemberForm } from "@/app/mng/page";
 
@@ -51,7 +51,7 @@ export function DrawerDialogDemo({ state, actions }: DialogProps) {
   const existingSchedules = state.selectedMember ? state.selectedMember.sessions || [] : [];
 
   const { session: memberSessions, dispatch: memberDispatch } = useMemberSessionForm(state.selectedMember?.id || 0, existingSchedules);
-
+  console.log('perubahan member session', memberSessions)
   function handleSubmit(){
     const filteredSessions = memberSessions.filter(s => s.tickets > 0);
     if(filteredSessions.length=== 0) {
@@ -134,7 +134,7 @@ function ProfileForm({ className }: React.ComponentProps<"form">) {
 
 
 
-function SessionList({ sessions, dispatch }: { sessions: SessionState[]; dispatch: React.Dispatch<React.ReducerAction<typeof reducer>> }) {
+function SessionList({ sessions, dispatch }: { sessions: SessionState[]; dispatch: React.Dispatch<Action> }) {
   return(
     <div className="px-4">
       {sessions.map((session) => (
@@ -144,7 +144,7 @@ function SessionList({ sessions, dispatch }: { sessions: SessionState[]; dispatc
   )
 }
 
-function SesiInput({ session, dispatch }: { session: SessionState; dispatch: React.Dispatch<React.ReducerAction<typeof reducer>> }) {
+function SesiInput({ session, dispatch }: { session: SessionState; dispatch: React.Dispatch<Action> }) {
 
 
   const handleTicketMinus = () => {

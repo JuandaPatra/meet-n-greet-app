@@ -37,7 +37,7 @@ export default function ConfirmationPopup({
       <Dialog
         open={!!state.member}
         onOpenChange={(isOpen) => {
-          if (!isOpen) action.onCancel(); // ⬅️ ini penting
+          if (!isOpen) action.onCancel(); 
         }}
       >
         <DialogTrigger asChild>
