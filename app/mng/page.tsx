@@ -26,7 +26,13 @@ type TicketSessionForm = {
   time: string;
 };
 
+type FeatureKey = "mng" | "twoshot";
+
+
 export default function MngPage() {
+
+  const feature: FeatureKey = "mng";
+  
   const selectedMembers = useStore((state) => state.selectedMembers);
   const addMember = useStore((state) => state.addMember);
   const updateTickets = useStore((state) => state.updateTickets);
@@ -37,7 +43,7 @@ export default function MngPage() {
   const [memberToDelete, setMemberToDelete] = useState<Member | null>(null);
 
   const handleSelectMember = (member: Member) => {
-    const exists = selectedMembers.find((m) => m.id === member.id);
+    const exists = selectedMembers[feature].find((m) => m.id === member.id);
     if (exists) {
       return alert("Member already selected");
     }
@@ -57,7 +63,7 @@ export default function MngPage() {
   const handleEditMember = (member: MemberForm) => {
     console.log("edit member", member);
     setMode("edit");
-    const selectedMember = selectedMembers.find((m) => m.id === member.id);
+    const selectedMember = selectedMembers[feature].find((m) => m.id === member.id);
 
     console.log("selected member edit", selectedMember);
     setSelectedMember(member);
@@ -75,7 +81,7 @@ export default function MngPage() {
 
   const confirmDelete = () => {
     if (!memberToDelete) return;
-    removeMember(memberToDelete?.id);
+    removeMember(feature,memberToDelete?.id);
     setMemberToDelete(null);
   };
 
@@ -91,9 +97,9 @@ export default function MngPage() {
     };
 
     if (mode === "edit") {
-      updateTickets(selectedMember.id, sessions);
+      updateTickets(feature,selectedMember.id, sessions);
     } else {
-      addMember(newData);
+      addMember(feature,newData);
     }
   };
 
@@ -103,7 +109,7 @@ export default function MngPage() {
       <Seachrbar onSelect={handleSelectMember} />
 
       <ListCardMember
-        state={selectedMembers}
+        state={selectedMembers[feature]}
         actions={{ onEdit: handleEditMember, onDelete: handleDeleteDrawer }}
       />
 
@@ -127,7 +133,7 @@ export default function MngPage() {
               onCancel: () => setMemberToDelete(null),
             }}
           />
-        )}
+      )}
       </div>
     </div>
   );
